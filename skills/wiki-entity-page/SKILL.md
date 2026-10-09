@@ -138,7 +138,7 @@ python3 skills/wiki-entity-page/scripts/verify_entity_page.py --registry --check
 
 > 这条不是洁癖：校验脚本早期把该页所有来源的段落拼成一张表再按段号取，导致多源页从第二个来源起全部误报「段首与原文不符」（实测 8 页 10 条假阳性）。现已改为按短名分源解析，但**不写短名就没有分源依据**，仍会退回合并表兜底。
 
-字段与正文结构见本 Skill 的骨架和自检说明；可运行的虚构 source 示例见 `wiki/sources/示例素材.md`。
+字段与正文结构见本 Skill 的骨架和自检说明；可运行的虚构 source 示例见 `examples/wiki-demo-source.md`。
 
 ### 第 5 步 · 硬自检（不可跳过）
 

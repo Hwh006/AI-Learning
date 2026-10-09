@@ -15,7 +15,7 @@ source .workflow-venv/bin/activate
 # Windows PowerShell 使用 .workflow-venv\Scripts\Activate.ps1
 python -m pip install -r requirements-ingest.txt
 python tools/wiki_lookup.py search '来源追溯'
-python skills/wiki-source-page/scripts/verify_source_page.py --page 'wiki/sources/示例素材.md'
+python skills/wiki-source-page/scripts/verify_source_page.py --page examples/wiki-demo-source.md
 python tools/raw_wiki_ingest.py prepare raw/examples/wiki-demo.md --model-id demo-run
 python tools/raw_wiki_ingest.py inspect raw/examples/wiki-demo.md
 python -m unittest discover -s tests -v
@@ -39,11 +39,28 @@ python -m unittest discover -s tests -v
 | `tools/wiki_lookup.py` | 按标题、标签、别名和导语定位候选 |
 | `tools/wiki_relations.py` | 关联候选与 Agent 决定的检查 |
 | `tools/batch_locate_quotes.py` | 批量定位摘录 |
-| `raw/examples/`、`wiki/sources/示例素材.md` | 可运行的虚构 source 示例 |
+| `raw/examples/`、`examples/wiki-demo-source.md` | 可运行的虚构 source 示例，放在 Wiki 外 |
 | `review.md` | 使用过程中保留冲突与待核验项 |
 | `tests/` | 原文分块、证据和跨页关系的回归测试 |
 
-Wiki 的其他目录在创建页面时按 `index.md` 建立。query 和 map 没有独立校验器。校验器主要检查格式、路径、引用和结构；语义正确性需要回读原文核对。
+`wiki/` 保留以下完整目录结构，各目录仅放 `.gitkeep`，不携带知识内容：
+
+```text
+wiki/
+├── assets/
+├── comparisons/
+├── concepts/
+├── entities/
+├── map/
+├── notes/
+│   └── _history/
+├── queries/
+├── solutions/
+├── sources/
+└── synthesis/
+```
+
+Git 不跟踪空目录，因此用 `.gitkeep` 保留结构；该文件不参与知识检索。query 和 map 没有独立校验器。校验器主要检查格式、路径、引用和结构；语义正确性需要回读原文核对。
 
 ## 本地资料与公开边界
 

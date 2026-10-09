@@ -135,7 +135,7 @@ python3 tools/batch_locate_quotes.py --page "wiki/sources/xxx.md" --write
 
 摘录行以中文引号开头；一条 bullet 下可放多条摘录，承接行也要以 `「` 开头（工具只认这种行，因为中文的 `「」` 也用作强调）。摘录写在一行内——原文的换行不影响比对（工具忽略空白差异），但**不要改字、补标点、修 ASR 错字**，改一个字就不再是原话了。摘录超过 15 条时可用 `###` 按主题分组。
 
-字段与正文结构见本 Skill 的骨架和自检说明；可运行的虚构 source 示例见 `wiki/sources/示例素材.md`。
+字段与正文结构见本 Skill 的骨架和自检说明；可运行的虚构 source 示例见 `examples/wiki-demo-source.md`。
 
 ### 第 5 步 · 硬自检（不可跳过）
 

@@ -131,7 +131,7 @@ python3 skills/wiki-synthesis-page/scripts/verify_synthesis_page.py --probe
 - **反面证据 ≠ 不确定性。** 反面证据指向**外部**（素材反驳我）；不确定性指向**内部**（我哪里推得虚）。两节都必写，别互相抄。
 - **支撑来源表三列全必填**，尤其「撤掉它，结论还成立吗」这一列 —— 这一列就是本 skill 存在的理由。
 
-字段与正文结构见本 Skill 的骨架和自检说明；可运行的虚构 source 示例见 `wiki/sources/示例素材.md`。
+字段与正文结构见本 Skill 的骨架和自检说明；可运行的虚构 source 示例见 `examples/wiki-demo-source.md`。
 
 ### 第 5 步 · 查重（必做）
 

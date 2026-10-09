@@ -5,6 +5,7 @@
 ## 保留与改写
 
 - 保留 Wiki 页型职责、七个 Wiki Skills、七个校验器、四个工具及两份测试文件。
+- 保留 `wiki/` 的十个顶层目录及 `notes/_history/`，各目录仅有 `.gitkeep`；虚构 source 示例移至 `examples/`。
 - 统一脚本路径为 `skills/`，Python 使用环境中的解释器。
 - 删除 Skill 中固定的个人素材数量、课程内容示例和存量页面状态。
 - 重新编写公共 `AGENTS.md`、README、空裁决清单与隐私优先的 `.gitignore`。

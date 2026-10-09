@@ -156,7 +156,7 @@ python3 skills/wiki-source-page/scripts/verify_source_page.py \
 
 ❌ **不要用 HTML 注释标来源**（`<!-- confidence: EXTRACTED | ... -->`）：阅读视图里不可见，等于没标。
 
-字段与正文结构见本 Skill 的骨架和自检说明；可运行的虚构 source 示例见 `wiki/sources/示例素材.md`。
+字段与正文结构见本 Skill 的骨架和自检说明；可运行的虚构 source 示例见 `examples/wiki-demo-source.md`。
 
 ### 第 5 步 · 硬自检（不可跳过）
 

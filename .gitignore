@@ -3,10 +3,9 @@
 !/raw/examples/
 /raw/examples/*
 !/raw/examples/wiki-demo.md
-/wiki/*
-!/wiki/sources/
-/wiki/sources/*
-!/wiki/sources/示例素材.md
+/wiki/**
+!/wiki/**/
+!/wiki/**/.gitkeep
 /memory/
 /docs/private/
 /docs/curriculum_vitae/

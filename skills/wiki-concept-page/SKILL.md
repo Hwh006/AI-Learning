@@ -169,7 +169,7 @@ python3 skills/wiki-entity-page/scripts/verify_entity_page.py --context "MySQL"
 | `指标` | 衡量什么、怎么算、方向、阈值条件、**不能证明什么**（§4.11） |
 | `术语` | 与近义词的边界 |
 
-字段与正文结构见本 Skill 的骨架和自检说明；可运行的虚构 source 示例见 `wiki/sources/示例素材.md`。
+字段与正文结构见本 Skill 的骨架和自检说明；可运行的虚构 source 示例见 `examples/wiki-demo-source.md`。
 
 ### 第 5 步 · 硬自检（不可跳过）
 
