@@ -1,0 +1,4 @@
+interface:
+  display_name: "逐步学习与知识掌握"
+  short_description: "从材料、知识地图或主题开始学习，检验理解并持续维护学习状态与手册"
+  default_prompt: "使用 $wiki-learning，根据我的材料、知识地图或学习目标推荐下一步，带我逐步学习并检查理解。"

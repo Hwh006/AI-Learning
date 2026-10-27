@@ -6,7 +6,10 @@
 /wiki/**
 !/wiki/**/
 !/wiki/**/.gitkeep
-/memory/
+/memory/*/*
+!/memory/*/.gitkeep
+/learning/**
+!/learning/.gitkeep
 /docs/private/
 /docs/curriculum_vitae/
 /docs/project_memory/
@@ -34,3 +37,8 @@ __pycache__/
 .obsidian/
 .playwright-mcp/
 node_modules/
+
+# Optional tool environments and local caches
+/tools/.wechat-runtime/
+/tools/.paddleocr-runtime/
+/tools/.audio-runtime/

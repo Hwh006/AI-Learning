@@ -1,0 +1,39 @@
+{
+  "schema_version": 2,
+  "revision": 0,
+  "domain_slug": "",
+  "topic_slug": "",
+  "topic": "",
+  "map_ref": null,
+  "source_notes": {},
+  "diagnosis": {"completed": false, "summary": "", "assessment_ids": []},
+  "session": {
+    "status": "active",
+    "phase": "diagnosis",
+    "active_unit_id": null,
+    "available_minutes": null,
+    "pending_question": null,
+    "repair_node": null,
+    "reason": ""
+  },
+  "units": [
+    {
+      "id": "",
+      "name": "",
+      "source_refs": [],
+      "prerequisite_ids": [],
+      "status": "pending",
+      "mastered": false,
+      "support_level": "full",
+      "taught": false,
+      "teaching_note": "",
+      "stuck_count": 0,
+      "recall_target": 2,
+      "recall_note": "",
+      "checks": {"understanding": null, "practice": null, "recall": []},
+      "weak_spots": []
+    }
+  ],
+  "assessments": [],
+  "updated_at": null
+}

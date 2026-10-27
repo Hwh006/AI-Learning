@@ -1,73 +1,77 @@
-# AI Learning：可追溯的 Agent Wiki 模板
+# AI-Learning：Agent 知识与学习工作空间
 
-把自己提供的 Markdown 素材整理成可回读、可查重、可校验的知识库。包含页型规范、七个 Wiki Skills、原文分块与证据台账、元数据检索、跨页关联检查及测试。
+把文章、书籍、PDF 和音视频整理为可追溯的知识库，再用于问答、学习、复习和知识文章写作。项目提供工作规则、Skills 和本地工具，需要配合能读写文件、运行命令的 Agent 客户端使用。
 
-这是从个人学习项目提取的通用版本。原始知识内容、简历、个人记忆、客户项目记录和旧 Git 历史不随仓库发布。内置素材完全虚构。
+## 需要安装什么
 
-## 快速开始
+- Git、[uv](https://docs.astral.sh/uv/getting-started/installation/)；下面命令通过 uv 安装 Python 3.12 和项目依赖。
+- 一个支持本地文件与终端的 Agent 客户端，并完成该客户端自己的模型配置。
+- 基础检索、入库校验、记忆和学习状态管理只需 `tiktoken`，不下载大模型；采集、OCR、转写按需安装。
+- 以下命令使用 macOS / Linux 的 shell。当前 OCR 默认配置按 macOS CPU 路径整理；Windows 安装未验证。
 
-需要 Python 3.10 或更高版本。以下命令从仓库根目录运行：
+## 快速安装
+
+尚未安装 uv 时，先运行官方安装命令：
 
 ```bash
-python3 -m venv .workflow-venv
-# macOS / Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+安装基础工作空间：
+
+```bash
+git clone https://github.com/Hwh006/AI-Learning.git
+cd AI-Learning
+uv venv --python 3.12 .workflow-venv
+uv pip install --python .workflow-venv/bin/python -r requirements-ingest.txt --index-url https://pypi.org/simple
 source .workflow-venv/bin/activate
-# Windows PowerShell 使用 .workflow-venv\Scripts\Activate.ps1
-python -m pip install -r requirements-ingest.txt
-python tools/wiki_lookup.py search '来源追溯'
+python tools/memory_catalog.py --check
 python skills/wiki-source-page/scripts/verify_source_page.py --page examples/wiki-demo-source.md
-python tools/raw_wiki_ingest.py prepare raw/examples/wiki-demo.md --model-id demo-run
-python tools/raw_wiki_ingest.py inspect raw/examples/wiki-demo.md
-python -m unittest discover -s tests -v
 ```
 
-首次运行 tokenizer 可能下载其编码文件，需要网络。普通元数据检索和 source 校验不需要 API Key，也不下载模型权重。
+在 Agent 客户端中打开这个文件夹，让它读取 `AGENTS.md`。Skills 的自动发现位置因客户端而异，也可以在对话中直接指定 `skills/<名称>/SKILL.md`。
 
-## 让 Agent 使用
+把自己的 Markdown 放入 `raw/`，例如要求：“按 raw-wiki-ingest Skill 将 raw/我的文章.md 入库，完成校验并同步知识地图。”也可以要求：“带我学习这篇文章，保存学习进度。”
 
-在能读取本地文件并运行 Python 的 Agent 客户端中打开仓库，先读 `AGENTS.md` 与 `index.md`。把自己的 Markdown 放进 `raw/`，明确指定文件并要求入库。Agent 按 `tools/raw_wiki_ingest.md` 逐单元取证、规划、撰写和校验。
+## 按需安装资料处理工具
 
-`prepare` 只是准备步骤，不等于已完成入库。模型提取与语义判断仍由你的 Agent 完成。此仓库不绑定模型供应商，也不提供自动模型调用服务。
+微信文章采集：安装固定版本的采集器、独立 Python 环境及 Camoufox 浏览器。
 
-## 目录
+```bash
+python tools/wechat_capture.py --setup
+python tools/wechat_capture.py 'https://mp.weixin.qq.com/s/替换为文章ID'
+```
 
-| 位置 | 用途 |
+PDF / 图片 OCR：安装 PaddleOCR 独立环境；识别模型在第一次解析时下载，之后本地复用。
+
+```bash
+python tools/paddleocr_parse.py --setup
+python tools/paddleocr_parse.py '/绝对路径/文档.pdf'
+```
+
+音频转写：安装 FunASR、PyTorch、FFmpeg 配套包及 SenseVoiceSmall 模型。模型保存在用户缓存，不需要另一个私有项目，也不需要云端转写 API Key。
+
+```bash
+uv venv --python 3.12 tools/.audio-runtime/venv
+uv pip install --python tools/.audio-runtime/venv/bin/python -r requirements-transcribe.txt --index-url https://pypi.org/simple
+tools/.audio-runtime/venv/bin/python tools/audio_backend.py setup
+python tools/local_audio_transcribe.py '/绝对路径/录音.mp3' --title '我的录音'
+```
+
+B 站视频复用上述转写环境：`python tools/bilibili_transcribe.py 'https://www.bilibili.com/video/替换为BV号'`。抖音转写还需由 Agent 的浏览器能力取得实际音轨，使用方式见 `skills/douyin-fast-transcribe/SKILL.md`。
+
+工具会下载各自的依赖；完整环境和模型不随 Git 仓库分发。OCR 输出、机器转写不等于已校对正文；后续按长文档或入库 Skill 处理。
+
+## 项目里有什么，能帮你做什么
+
+| 内容 | 用途 |
 |---|---|
-| `index.md` | 九类 Wiki 页型的职责与边界 |
-| `skills/wiki-*/` | 七个页型的写作合同与校验器 |
-| `tools/raw_wiki_ingest.py` | 分块、位置、提取台账、页面计划与完成核验 |
-| `tools/wiki_lookup.py` | 按标题、标签、别名和导语定位候选 |
-| `tools/wiki_relations.py` | 关联候选与 Agent 决定的检查 |
-| `tools/batch_locate_quotes.py` | 批量定位摘录 |
-| `raw/examples/`、`examples/wiki-demo-source.md` | 可运行的虚构 source 示例，放在 Wiki 外 |
-| `review.md` | 使用过程中保留冲突与待核验项 |
-| `tests/` | 原文分块、证据和跨页关系的回归测试 |
+| `AGENTS.md`、`intents/` | 让 Agent 按任务选择检索、学习、写作或入库流程 |
+| `skills/` | 文章采集、长文档提取、图文校对、音视频转写、Wiki 生成、地图维护、学习与知识文章写作 |
+| `tools/` | 执行检索、原文分块、引文定位、来源/链接校验、地图覆盖检查及状态保存 |
+| `memory/` | 七类个人记忆的管理机制；按元数据查找，确认后保存使用者自己的要求与背景 |
+| `raw/`、`wiki/`、`learning/` | 保存使用者自己的原文、知识页、学习手册、进度与讨论 |
+| `examples/`、`tests/` | 虚构示例与核心流程的回归检查 |
 
-`wiki/` 保留以下完整目录结构，各目录仅放 `.gitkeep`，不携带知识内容：
-
-```text
-wiki/
-├── assets/
-├── comparisons/
-├── concepts/
-├── entities/
-├── map/
-├── notes/
-│   └── _history/
-├── queries/
-├── solutions/
-├── sources/
-└── synthesis/
-```
-
-Git 不跟踪空目录，因此用 `.gitkeep` 保留结构；该文件不参与知识检索。query 和 map 没有独立校验器。校验器主要检查格式、路径、引用和结构；语义正确性需要回读原文核对。
-
-## 本地资料与公开边界
-
-`.gitignore` 默认忽略新增 raw、wiki、memory、个人文档、数据库、模型、运行台账、凭据和客户端状态，仅保留随仓库提供的演示素材。这有助于避免误提交，不能检查已经跟踪的文件或清除历史。
-
-发布清单及排除理由见 `PUBLIC_EXPORT.md`。个人面试工具、需要外部转写后端的入口、针对既有采集台账的维护工具与独立学习画布未纳入此次通用 Wiki 发行版。
-
-## 使用许可
-
-当前仓库未指定开源许可证；公开可见与获得再分发许可是不同事项。若需要发布衍生发行版，请先与仓库作者明确许可。
+仓库初始不含作者的课程原文、知识库、个人记忆或学习记录。发布范围见 [PUBLIC_EXPORT.md](PUBLIC_EXPORT.md)，外部依赖来源见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。

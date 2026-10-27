@@ -18,6 +18,53 @@ class RawWikiIngestTest(unittest.TestCase):
     def setUpClass(cls):
         cls.encoding = workflow.tokenize("o200k_base")
 
+    def test_ocr_intermediates_and_aggregates_cannot_start_ingest(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp).resolve()
+            path = root / "raw/example.md"
+            path.parent.mkdir()
+            with patch.object(workflow, "ROOT", root), patch.object(workflow, "RUNS", root / "runs"):
+                for role in ("ocr_output", "ocr_page", "aggregate", "index"):
+                    with self.subTest(role=role):
+                        path.write_text(f'---\nraw_role: "{role}"\ningest_allowed: true\n---\n# 正文\n文字。\n')
+                        with self.assertRaisesRegex(ValueError, "not ingestible"):
+                            workflow.prepare(SimpleNamespace(source="raw/example.md"))
+                        # Evidence lookup stays available even when preparing this artifact is forbidden.
+                        self.assertEqual(workflow.source_path("raw/example.md")[0], path.resolve())
+                path.write_text('---\ningest_allowed: false\n---\n# 正文\n文字。\n')
+                with self.assertRaisesRegex(ValueError, "not ingestible"):
+                    workflow.prepare(SimpleNamespace(source="raw/example.md"))
+                self.assertFalse((root / "runs").exists())
+
+    def test_section_requires_provenance_and_review_before_prepare(self):
+        path = Path("section.md")
+        header = ('raw_role: section\ningest_allowed: true\nsource_id: sample\n'
+                  'source_file: book.pdf\nsource_sha256: ' + 'a' * 64 + '\n'
+                  'extraction_manifest: outputs/ocr/manifest.json\nsection_id: chapter-01\n'
+                  'heading_path: ["第一章"]\nsource_locators: [{page: 1, blocks: [0]}]\n'
+                  'structure_review: confirmed\nocr_review: agent_reviewed\n')
+        workflow.check_ingest_input(path, f'---\n{header}---\n\n# 第一章\n正文。\n')
+        text_header = header.replace('ocr_review: agent_reviewed',
+                                    'extraction_method: text_extract\ncontent_review: agent_reviewed\nocr_review: not_applicable')
+        workflow.check_ingest_input(path, f'---\n{text_header}---\n# 第一章\n正文。\n')
+        with self.assertRaisesRegex(ValueError, "review incomplete"):
+            pending_ocr = text_header.replace('extraction_method: text_extract', 'extraction_method: paddleocr')
+            workflow.check_ingest_input(path, f'---\n{pending_ocr}---\n# 第一章\n')
+        with self.assertRaisesRegex(ValueError, "review incomplete"):
+            workflow.check_ingest_input(path, f'---\n{header.replace("agent_reviewed", "unreviewed")}---\n# 第一章\n')
+        with self.assertRaisesRegex(ValueError, "missing: source_locators"):
+            incomplete = header.replace('source_locators: [{page: 1, blocks: [0]}]\n', '')
+            workflow.check_ingest_input(path, f'---\n{incomplete}---\n# 第一章\n')
+
+    def test_legacy_paddle_document_is_blocked_without_role_metadata(self):
+        with tempfile.TemporaryDirectory() as temp:
+            directory = Path(temp)
+            path = directory / "document.md"
+            (directory / "manifest.json").write_text(json.dumps({
+                "image_export": "page_region_crops", "markdown": "document.md"}))
+            with self.assertRaisesRegex(ValueError, "intermediate output"):
+                workflow.check_ingest_input(path, "# 第一章\n正文。\n")
+
     def test_structured_document_uses_heading_boundaries(self):
         source = "# 甲\n第一节内容。\n## 乙\n第二节内容。\n# 丙\n第三节内容。\n"
         mode, _, _, units = workflow.make_units(source, "raw/example.md", self.encoding, 10, 100)
@@ -119,7 +166,8 @@ class RawWikiIngestTest(unittest.TestCase):
                 workflow.record_plan(SimpleNamespace(source="raw/example.md", json_file=str(plan_file)))
                 candidate = root / "wiki/notes/示例方法.md"
                 candidate.parent.mkdir(parents=True, exist_ok=True)
-                candidate.write_text("---\ntype: note\ntitle: 示例方法\nsources: [sources/example.md]\nstatus: draft\ntags: [目标]\n---\n# 示例方法\n\n## 步骤\n核对业务目标。\n")
+                candidate.write_text("---\ntype: note\ntitle: 示例方法\nstatus: draft\ntags: [目标]\n"
+                                     "sources: [sources/example.md]\n---\n# 示例方法\n\n## 步骤\n核对业务目标。\n")
                 with self.assertRaisesRegex(ValueError, "undecided strong candidate"):
                     workflow.record_plan(SimpleNamespace(source="raw/example.md", json_file=str(plan_file)))
                 payload["pages"][0]["relations"] = [{

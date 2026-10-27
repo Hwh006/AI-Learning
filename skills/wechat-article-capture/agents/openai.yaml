@@ -1,0 +1,6 @@
+interface:
+  display_name: "微信文章采集"
+  short_description: "优先调用固定的本地采集器解析微信公众号链接，保留原文及图片并返回可核对路径"
+  default_prompt: "使用 $wechat-article-capture 解析这篇微信公众号文章并保留原文。"
+policy:
+  allow_implicit_invocation: true

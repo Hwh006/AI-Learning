@@ -1,0 +1,28 @@
+# 写作研究的原始来源
+
+仅提供原文链接；作者观点与事实仍需独立核实。本包不复制文章全文或图片。
+
+- 01 [你的 Agent 评测，通过率 100% 却不可信？](https://mp.weixin.qq.com/s/jIdtQo4OtWtF-Z-Gjp0cUg)
+- 02 [AIGC 智能体怎么测？一套四层全链路评测体系](https://mp.weixin.qq.com/s/sjsNSV_B17CNepxE5LL7YA)
+- 03 [把 AI Agent 比作一个人，终于把智能体架构讲明白了](https://mp.weixin.qq.com/s/7w86C1NPgADpgPgOz0tTiA)
+- 04 [一次投毒，终身潜伏：AI 智能体的「记忆」是怎么被下毒的](https://mp.weixin.qq.com/s/pJ3eiwxnQpYxBmvsJqdpmw)
+- 05 [一文看懂 AI 智能体的七层黑客攻击入口](https://mp.weixin.qq.com/s/oupfIjZ31CZhEvOoIix-tQ)
+- 06 [文档都上传了，AI 为什么还在胡说八道？](https://mp.weixin.qq.com/s/gGnACTEZpRX5ibJsKrlVfA)
+- 07 [特斯拉跑了 240 亿公里，为什么还不敢完全自动驾驶？](https://mp.weixin.qq.com/s/PkHPoVwa6a4aa2FgsFH6MA)
+- 08 [LLM当裁判，到底靠不靠谱？](https://mp.weixin.qq.com/s/FWlfsZpMSqzYvIX7AQVFlg)
+- 09 [美团 Agent 评测体系技术拆解：从答案评测到行为评测的工程范式](https://mp.weixin.qq.com/s/uvV3X03HOveY-pIrpW8i0g)
+- 10 [字节扣子罗盘技术拆解：从离线打分到在线回归的评测闭环](https://mp.weixin.qq.com/s/b3Czz6hi0gjGKjOPF_gD2Q)
+- 11 [腾讯 Agent 评测体系技术拆解：从 Harness 工程化到质量飞轮](https://mp.weixin.qq.com/s/QF1CaJ5HhLoCq-jlzsTS7g)
+- 12 [Agent 评测平台怎么搭？Anthropic 给出了标准答案](https://mp.weixin.qq.com/s/GsNH5naV-HnkMu1dFQgDHg)
+- 13 [自建 Agent 基准，自家夺冠：百度 DuMateBench 的评测公信力分析](https://mp.weixin.qq.com/s/Eo9mH4PYN524IWBC7CRjcA)
+- 14 [Meta 143 亿入股 Scale AI：海外Agent 评测正在变成一门生意](https://mp.weixin.qq.com/s/E-ih1RoQvB5NaMAnzLbkBg)
+- 15 [电商 Agent 评测技术拆解：淘宝落地实践](https://mp.weixin.qq.com/s/whcfw0E7ZN-D56K9UXcjwg)
+- 16 [腾讯 WorkBuddy Agent 安全防线拆解和评测策略](https://mp.weixin.qq.com/s/fXqTXE2uB_D6fnE-y5KfHQ)
+- 17 [DeepSeek 崩了 5 小时：AI 榜单之外，可用性才是最容易被漏评的一维](https://mp.weixin.qq.com/s/HB609FU6jDV4vUNECOktPg)
+- 18 [存储 IPD 遇上 AI Agent：35 个智能体接管测试全流程](https://mp.weixin.qq.com/s/WvAhrdyU4fpT7iXyWEcsMA)
+- 19 [AI Agent 数据飞轮：让每个 Bad Case 自动长成资产](https://mp.weixin.qq.com/s/LNuVNow63FTwls8RJZhM9Q)
+- 20 [多 Agent 群体协作的评测基准设计方法](https://mp.weixin.qq.com/s/HmpSLcKRSd8Xr6b9RMFTpQ)
+- 21 [京东 Agent 评测体系技术拆解：从 6 亿人的购物车里长出来的评测体系](https://mp.weixin.qq.com/s/RyR5lGNlmWBfo-AUz6-Daw)
+- 22 [Google DeepMind 多模态 Agent 评测体系技术拆解](https://mp.weixin.qq.com/s/EOzboV1ceIrtBRzbHeTifw)
+- 23 [OpenAI Evals技术拆解：Agent评测的入门教科书](https://mp.weixin.qq.com/s/_m7x5KPazF5jQX9z8ew9xg)
+- 24 [理想汽车 Agent 评测体系技术拆解：从事故复盘到世界模型考场](https://mp.weixin.qq.com/s/mvaysS_nDN1mG92BbORuow)

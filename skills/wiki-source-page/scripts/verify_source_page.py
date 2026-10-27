@@ -60,7 +60,7 @@ REQUIRED_FM = [
 ]
 DRIFT_FM = ['sources', 'author', 'created', 'updated']
 RELIABILITY_ENUM = {'结构化原文', '二手整理', '口语转写', '练习材料'}
-MATERIAL_ENUM = {'课程总结', '课堂转写', '智能纪要', '面试资料', '外部文章'}
+MATERIAL_ENUM = {'课程总结', '课堂转写', '智能纪要', '面试资料', '外部文章', '学习对话'}
 PLACEHOLDER_MARKERS = ['全文检索', '自行检索', '请自行搜索']
 
 # 候选段筛选词。阈值故意收紧：宁少不滥——这个工具是防漏摘的提醒，不是穷举清单。
@@ -99,9 +99,19 @@ def norm_title(s):
 
 
 def header_lines(raw_text):
-    """返回 [(层级, 标题文本, 行号)]，即原文所有 Markdown 标题行。"""
+    """返回 [(层级, 标题文本, 行号)]，忽略围栏代码内的伪标题。"""
     out = []
+    fence = None
     for i, line in enumerate(raw_text.split('\n')):
+        marker = re.match(r'^ {0,3}(`{3,}|~{3,})(.*)$', line)
+        if fence:
+            if (marker and marker.group(1)[0] == fence[0]
+                    and len(marker.group(1)) >= len(fence) and not marker.group(2).strip()):
+                fence = None
+            continue
+        if marker:
+            fence = marker.group(1)
+            continue
         m = re.match(r'^\s{0,3}(#{1,6})\s+(.*?)\s*#*\s*$', line)
         if m:
             out.append((len(m.group(1)), m.group(2).strip(), i))

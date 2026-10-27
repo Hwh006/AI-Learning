@@ -67,6 +67,45 @@ def source_path(argument: str) -> tuple[Path, str]:
     return path, path.relative_to(ROOT).as_posix()
 
 
+def check_ingest_input(path: Path, content: str) -> None:
+    """Enforce declared OCR artifact roles without changing legacy raw evidence."""
+    header = re.match(r"\A\ufeff?---\s*\n(.*?)\n---(?:\s*\n|\Z)", content, re.S)
+    fields = {}
+    if header:
+        for match in re.finditer(r"(?m)^([A-Za-z_][\w-]*):[ \t]*(.*)$", header[1]):
+            value = re.sub(r"\s+#.*$", "", match[2]).strip().strip("\"'")
+            fields[match[1]] = value
+    role = fields.get("raw_role", "").lower()
+    blocked = {"ocr_output", "ocr_page", "aggregate", "index"}
+    if role in blocked or ("ingest_allowed" in fields and fields["ingest_allowed"].lower() != "true"):
+        raise ValueError("OCR/aggregate/index input is not ingestible; use skills/long-document-extraction/SKILL.md "
+                         "and prepare each reviewed section raw from the queue")
+    if role == "section":
+        required = ("source_id", "source_file", "source_sha256", "extraction_manifest",
+                    "section_id", "heading_path", "source_locators")
+        missing = [key for key in required if not fields.get(key) or fields[key] in {"[]", "{}", "null"}]
+        if missing or fields.get("ingest_allowed", "").lower() != "true":
+            raise ValueError("section raw needs provenance metadata and ingest_allowed: true; missing: "
+                             + ", ".join(missing))
+        reviewed = {"agent_reviewed", "human_verified"}
+        content_review = fields.get("content_review", fields.get("ocr_review"))
+        ocr_pending = (fields.get("extraction_method") == "paddleocr"
+                       and fields.get("ocr_review") not in reviewed)
+        if fields.get("structure_review") != "confirmed" or content_review not in reviewed or ocr_pending:
+            raise ValueError("section structure/OCR review incomplete; use skills/long-document-extraction/SKILL.md")
+    # Older PaddleOCR output has no role header. Its adjacent manifest identifies
+    # the machine document unambiguously, without guessing from heading count.
+    manifest_path = path.parent / "manifest.json"
+    if path.name == "document.md" and manifest_path.is_file():
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            manifest = {}
+        if manifest.get("image_export") == "page_region_crops" and manifest.get("markdown") == "document.md":
+            raise ValueError("PaddleOCR document.md is intermediate output; split and review section raw "
+                             "using skills/long-document-extraction/SKILL.md before ingest")
+
+
 def tokenize(encoding_name: str):
     try:
         import tiktoken
@@ -276,6 +315,7 @@ def prepare(args: argparse.Namespace) -> dict[str, Any]:
     path, relative = source_path(args.source)
     raw = path.read_bytes()
     content = raw.decode("utf-8")
+    check_ingest_input(path, content)
     digest = sha256(raw)
     encoding = tokenize(args.encoding)
     mode, reason, source_id, units = make_units(content, relative, encoding, args.chunk_tokens, args.model_tokens)
@@ -318,6 +358,7 @@ def prepare(args: argparse.Namespace) -> dict[str, Any]:
 def load_run(source: str) -> tuple[Path, str, Path, dict[str, Any], list[dict[str, Any]]]:
     path, relative = source_path(source)
     raw = path.read_bytes()
+    check_ingest_input(path, raw.decode("utf-8"))
     digest = sha256(raw)
     source_root = source_run_root(relative, digest)
     pointer = source_root / "current.json"
